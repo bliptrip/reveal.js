@@ -1,0 +1,303 @@
+/* ==========================================================================
+   webslides-compat.css
+
+   WebSlides and reveal.js both assume they own the page. This file is the
+   treaty between them. Load it AFTER webslides.css and BEFORE seminar.css.
+
+   The division of labour:
+
+     reveal.js  owns the deck  -- which slide is showing, transitions,
+                                  scaling, the speaker view, the overview.
+     WebSlides  owns the slide -- typography, .wrap / .grid / .column,
+                                  .card-50, .bg-apple, background overlays.
+
+   So everything here does one of three things: stop WebSlides from
+   positioning slides, stop reveal from restyling their contents, or
+   re-establish a WebSlides behaviour that depended on the viewport.
+   ========================================================================== */
+
+
+/* --------------------------------------------------------------------------
+   1. The slide box, and the viewport units that used to reference it
+   --------------------------------------------------------------------------
+   The original deck is full of vh units -- .fit-img is max-height:58vh, the
+   trait panels are height:calc(100vh - 33rem). Under WebSlides that was
+   correct: a section *was* the viewport.
+
+   Under reveal a slide is a fixed 1920x1080 box that gets scaled to fit the
+   display, so a raw vh would measure the browser window and the numbers
+   would drift with every projector. reveal publishes the box as
+   --slide-width / --slide-height; these two properties turn it into
+   something a stylesheet can multiply by. tools/ws2reveal.py rewrites
+   `58vh` to `calc(58 * var(--wsvh))` throughout.
+
+   Fallbacks match the Reveal.initialize() width/height in index.html. */
+.reveal {
+  --wsvh: calc(var(--slide-height, 1080px) / 100);
+  --wsvw: calc(var(--slide-width, 1920px) / 100);
+}
+
+
+/* --------------------------------------------------------------------------
+   2. Undo WebSlides' slide positioning
+   --------------------------------------------------------------------------
+   webslides.css sets `section, .slide { min-height: 100vh }` plus generous
+   top/bottom padding at >=1024px. reveal positions and sizes slides itself;
+   a min-height of 100vh inside a 1080px box makes every slide overflow on a
+   laptop. Keep the flex column (that is what centres slide content and what
+   .slide-top / .slide-bottom override) and drop the sizing. */
+.reveal .slides section,
+.reveal .slides section.present,
+.reveal .slides section.past,
+.reveal .slides section.future {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  min-height: 0;
+  height: 100%;
+  width: 100%;
+
+  /* WebSlides' 2.4rem base padding, and its >=1024px 12rem top/bottom.
+     Hard-coded here rather than inherited, because the media query keyed
+     off the window and the slide box no longer tracks the window. */
+  padding: 6rem 2.4rem;
+  box-sizing: border-box;
+
+  /* reveal's own defaults that would fight the deck */
+  text-align: left;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+/* .fullscreen is WebSlides' no-padding slide (full-bleed card or video). */
+.reveal .slides section.fullscreen {
+  padding: 0;
+}
+
+/* WebSlides' vertical alignment modifiers, restated at a specificity that
+   beats the rule above. */
+.reveal .slides section.slide-top    { justify-content: flex-start; }
+.reveal .slides section.slide-bottom { justify-content: flex-end; }
+.reveal .slides section.slide-center { justify-content: center; }
+
+
+/* --------------------------------------------------------------------------
+   3. Root font size
+   --------------------------------------------------------------------------
+   The whole WebSlides type scale is rem-based off `html { font-size: 62.5% }`
+   -- 1rem = 10px, so the deck's h1 at 7.2rem is 72px on a 1080p screen. That
+   is exactly the relationship reveal's 1920x1080 logical box preserves, so
+   the scale carries over unchanged. Restated here because reveal.css also
+   has opinions about root sizing. */
+html {
+  font-size: 62.5%;
+}
+
+.reveal {
+  font-family: 'Roboto', 'San Francisco', helvetica, arial, sans-serif;
+  font-size: 1.8rem;
+  font-weight: 300;
+  line-height: 1;
+  color: #333;
+}
+
+
+/* --------------------------------------------------------------------------
+   4. Stop reveal.css restyling slide contents
+   --------------------------------------------------------------------------
+   reveal.css uppercases headings, imposes its own heading scale, resets list
+   and table styling, and forces text-transform. All of that would overwrite
+   WebSlides' typography. Neutralise it and let webslides.css win. */
+.reveal h1, .reveal h2, .reveal h3,
+.reveal h4, .reveal h5, .reveal h6 {
+  text-transform: none;
+  text-shadow: none;
+  word-wrap: break-word;
+  margin: 0;
+  font-weight: inherit;
+  line-height: inherit;
+  letter-spacing: normal;
+  color: inherit;
+  font-size: inherit;   /* webslides.css sets the real size per level */
+}
+
+.reveal p,
+.reveal li,
+.reveal dt,
+.reveal dd,
+.reveal td,
+.reveal th {
+  margin: revert;
+  line-height: revert;
+}
+
+.reveal ul,
+.reveal ol,
+.reveal dl {
+  display: block;
+  margin: revert;
+  padding: revert;
+}
+
+.reveal table {
+  margin: revert;
+  border-collapse: collapse;
+  font-size: inherit;
+}
+
+.reveal table th,
+.reveal table td {
+  border-bottom: none;   /* .map-table / .cmp-table draw their own */
+  padding: revert;
+  text-align: revert;
+}
+
+.reveal strong,
+.reveal b { font-weight: 600; }
+
+.reveal small {
+  display: inline;
+  font-size: inherit;
+  line-height: inherit;
+  vertical-align: baseline;
+}
+
+.reveal img {
+  margin: 0;
+  border: none;
+  box-shadow: none;
+  background: none;
+  max-width: 100%;
+}
+
+.reveal figure {
+  margin: 0;
+}
+
+.reveal a {
+  color: inherit;
+  text-decoration: none;
+}
+.reveal a:hover {
+  color: inherit;
+  text-shadow: none;
+  border: none;
+}
+
+/* reveal sets `section > * { margin: 20px auto }` in places; the WebSlides
+   containers do their own spacing. */
+.reveal .slides section > .wrap,
+.reveal .slides section > .card-50,
+.reveal .slides section > .card-20,
+.reveal .slides section > .grid {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+/* --------------------------------------------------------------------------
+   5. Backgrounds and background video
+   --------------------------------------------------------------------------
+   The deck uses WebSlides' in-slide background elements rather than reveal's
+   data-background-* attributes:
+
+       <span class="background ddark" style="background-image:url(...)">
+       <div class="embed cover background ddark"><video ...>
+
+   These are kept as-is. webslides.css already absolutely positions
+   .background to the four corners of its containing block, and a reveal
+   slide is a positioned box, so the geometry works unchanged -- and, more to
+   the point, the .dark / .ddark overlay opacities the deck was tuned against
+   (lightened on 9 Sep) keep their exact values.
+
+   Two things do need saying explicitly. */
+
+/* reveal stacks slides; a background element must sit under the content but
+   over the slide's own background colour. */
+.reveal .slides section > .background,
+.reveal .slides section > [class*='background-'],
+.reveal .slides section > .embed.background {
+  z-index: 0;
+}
+
+.reveal .slides section > .wrap,
+.reveal .slides section > .card-50,
+.reveal .slides section > .card-20,
+.reveal .slides section > .grid,
+.reveal .slides section > footer,
+.reveal .slides section > h1,
+.reveal .slides section > h2 {
+  position: relative;
+  z-index: 2;
+}
+
+/* Background video: WebSlides' .embed makes the <video> absolute and 100%,
+   but leaves it stretched. object-fit was only applied under .fullscreen.
+   Preserved as-is so the framing matches the original deck exactly. */
+.reveal .slides section .embed.background video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* .bg-apple is the deck's dark gradient, .bg-white its light slides. On a
+   reveal slide these need to paint the whole box, not just the content. */
+.reveal .slides section.bg-apple,
+.reveal .slides section.bg-white {
+  background-size: cover;
+  background-position: center;
+}
+
+/* The deck switched its main line to the dark theme on 9 Sep specifically to
+   stop white flashes between slides. reveal's inter-slide background would
+   reintroduce one, so match it to the deck. */
+.reveal-viewport {
+  background: #000;
+  background-color: #000;
+}
+
+
+/* --------------------------------------------------------------------------
+   6. Speaker notes must never reach the projector
+   --------------------------------------------------------------------------
+   reveal hides .notes by default, but the deck's notes are inside slides
+   that WebSlides styled as flex children, and `display:flex` on a parent
+   will happily lay out an <aside> that only had `display:none` removed by an
+   errant rule. Belt and braces -- getting this wrong puts "Do not read the
+   title" on a 32-inch display in front of the hiring committee. */
+.reveal .slides section aside.notes,
+.reveal .slides section .notes {
+  display: none !important;
+}
+
+
+/* --------------------------------------------------------------------------
+   7. Overview mode
+   --------------------------------------------------------------------------
+   reveal's overview ('o' / Esc) is the replacement for WebSlides' slide grid
+   ('-'). Slides are scaled down hard, so background videos in the grid are
+   wasted work -- and four autoplaying videos at once was a documented
+   annoyance in the WebSlides deck too. */
+.reveal.overview .slides section .embed.background video {
+  display: none;
+}
+.reveal.overview .slides section {
+  padding: 3rem 1.2rem;
+}
+
+
+/* --------------------------------------------------------------------------
+   8. Print / PDF export
+   --------------------------------------------------------------------------
+   Append ?print-pdf to the URL and print to PDF. WebSlides' min-height:100vh
+   would give one slide per two pages. */
+@media print {
+  .reveal .slides section {
+    min-height: 0;
+    height: 100%;
+    page-break-after: always;
+  }
+}
