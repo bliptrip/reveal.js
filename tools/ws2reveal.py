@@ -190,18 +190,22 @@ HEAD = """<!doctype html>
          theme, and a reveal theme would fight it for every heading. -->
     <link rel="stylesheet" href="../dist/reveal.css">
 
-    <!-- WebSlides' stylesheet, upstream and unmodified (MIT). This is what
+    <!-- WebSlides' stylesheet (MIT), with its @media queries evaluated at the
+         deck's logical 1920x1080 by tools/bake-webslides.py. This is what
          makes the port a port: .wrap, .grid, .column, .card-50, .bg-apple,
          the typography scale and the background/overlay classes all still
-         mean what they meant. -->
-    <link rel="stylesheet" href="css/webslides.css">
+         mean what they meant -- and mean it regardless of window size, which
+         the un-baked upstream file (css/webslides.css, kept for reference)
+         could not, because reveal scales slides with a transform that media
+         queries never see. -->
+    <link rel="stylesheet" href="css/webslides-1920.css">
     <link rel="stylesheet" href="css/svg-icons.css">
     <link rel="stylesheet" href="css/mermaid.css">
     <link rel="stylesheet" href="css/extend.css">
 
     <!-- The shim: neutralises the parts of WebSlides that assume it owns the
          page, and re-establishes them inside a reveal slide. Must come after
-         webslides.css. -->
+         webslides-1920.css. -->
     <link rel="stylesheet" href="css/webslides-compat.css">
 
     <!-- Deck-specific styles, lifted verbatim out of the WebSlides deck's
@@ -244,6 +248,12 @@ TAIL = """      </div>
         // (justify-content:center, plus .slide-top / .slide-bottom to
         // override). reveal's centring would fight that, so it stays off.
         center: false,
+
+        // reveal writes the display value inline on every slide it shows,
+        // and its default 'block' would beat WebSlides' `section {
+        // display: flex }` from any stylesheet. Flex is what makes the
+        // vertical centring, .slide-top and .slide-bottom work at all.
+        display: 'flex',
 
         hash: true,
         slideNumber: 'c/t',

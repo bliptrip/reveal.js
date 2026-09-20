@@ -316,11 +316,19 @@ window.RevealSeminar = function () {
     deck.getSlides().forEach((s, i) => {
       const prevVisibility = s.style.visibility;
       const prevDisplay = s.style.display;
+      const prevJustify = s.style.justifyContent;
       s.style.visibility = 'hidden';
-      s.style.display = 'block';
+      // Lay the slide out exactly as reveal shows it (config.display is
+      // 'flex' for this deck -- WebSlides' sections are flex columns), but
+      // with the content pinned to the top: a centred flex column pushes
+      // excess height out of both ends, and scrollHeight only sees the
+      // bottom half of it.
+      s.style.display = cfg.display || 'block';
+      s.style.justifyContent = 'flex-start';
       const h = s.scrollHeight;
       s.style.visibility = prevVisibility;
       s.style.display = prevDisplay;
+      s.style.justifyContent = prevJustify;
       if (h > box + tolerance) {
         out.push({
           n: i + 1,

@@ -14,18 +14,22 @@
          theme, and a reveal theme would fight it for every heading. -->
     <link rel="stylesheet" href="../dist/reveal.css">
 
-    <!-- WebSlides' stylesheet, upstream and unmodified (MIT). This is what
+    <!-- WebSlides' stylesheet (MIT), with its @media queries evaluated at the
+         deck's logical 1920x1080 by tools/bake-webslides.py. This is what
          makes the port a port: .wrap, .grid, .column, .card-50, .bg-apple,
          the typography scale and the background/overlay classes all still
-         mean what they meant. -->
-    <link rel="stylesheet" href="css/webslides.css">
+         mean what they meant -- and mean it regardless of window size, which
+         the un-baked upstream file (css/webslides.css, kept for reference)
+         could not, because reveal scales slides with a transform that media
+         queries never see. -->
+    <link rel="stylesheet" href="css/webslides-1920.css">
     <link rel="stylesheet" href="css/svg-icons.css">
     <link rel="stylesheet" href="css/mermaid.css">
     <link rel="stylesheet" href="css/extend.css">
 
     <!-- The shim: neutralises the parts of WebSlides that assume it owns the
          page, and re-establishes them inside a reveal slide. Must come after
-         webslides.css. -->
+         webslides-1920.css. -->
     <link rel="stylesheet" href="css/webslides-compat.css">
 
     <!-- Deck-specific styles, lifted verbatim out of the WebSlides deck's
@@ -44,27 +48,27 @@
       <div class="slides">
         <section class="bg-apple aligncenter" data-minutes="1" data-section="A. Opening" data-section-count="3" data-section-index="1" data-section-minutes="3" data-timing="60" id="title-new">
         <div class="embed cover background ddark">
-        <video autoplay="" loop="" muted="" playsinline="">
-        <source src="../static/videos/GRYG Original and Semantic.slow.mp4"/>
-        </video>
+          <video autoplay="1" loop="1" muted="1" playsinline="">
+            <source src="../static/videos/GRYG Original and Semantic.slow.mp4"/>
+          </video>
         </div>
         <div class="wrap">
-        <h2><i class="fa-solid fa-wind fa-rotate-270 fa-sm"></i></h2>
-        <h1 class="text-landing aligncenter"><strong>From Bogs to Vineyards</strong></h1>
-        <h2 class="aligncenter">Phenomics-Driven Genetics of Growth and Phenology<br/>
-                      in a Perennial Fruit Crop
-                    </h2>
-        <h2><i class="fa-solid fa-wind fa-rotate-90 fa-sm"></i></h2>
+          <h2 class="aligncenter"><i class="fa-solid fa-wind fa-rotate-270 fa-sm"></i></h2>
+          <h1 class="text-landing aligncenter"><strong>From Bogs to Vineyards</strong></h1>
+          <h2 class="aligncenter">Phenomics-Driven Genetics of Growth and Phenology<br/>
+                        in a Perennial Fruit Crop
+                      </h2>
+          <h2 class="aligncenter"><i class="fa-solid fa-wind fa-rotate-90 fa-sm"></i></h2>
         </div>
         <footer>
-        <div class="content-right" style="text-align:right">
-        <span>
-        <h4><em>Andrew F. Maule, Ph.D.</em></h4>
-        <h4>Research Associate · UW–Madison</h4>
-        <h4>Zalapa Lab · USDA-ARS Vegetable Crops Research Unit</h4>
-        <h5>GGRU Research Geneticist seminar · Geneva, NY · September 2026</h5>
-        </span>
-        </div>
+          <div class="content-right" style="text-align:right">
+            <span>
+            <h4><em>Andrew F. Maule, Ph.D.</em></h4>
+            <h4>Research Associate · UW–Madison</h4>
+            <h4>Zalapa Lab · USDA-ARS Vegetable Crops Research Unit</h4>
+            <h5>GGRU Research Geneticist seminar · Geneva, NY · September 2026</h5>
+            </span>
+          </div>
         </footer>
 
         <!-- .end .card-50 -->
@@ -1469,6 +1473,12 @@
         // (justify-content:center, plus .slide-top / .slide-bottom to
         // override). reveal's centring would fight that, so it stays off.
         center: false,
+
+        // reveal writes the display value inline on every slide it shows,
+        // and its default 'block' would beat WebSlides' `section {
+        // display: flex }` from any stylesheet. Flex is what makes the
+        // vertical centring, .slide-top and .slide-bottom work at all.
+        display: 'flex',
 
         hash: true,
         slideNumber: 'c/t',

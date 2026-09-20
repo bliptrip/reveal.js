@@ -110,7 +110,7 @@ by default; add `showNotes: true` to the config if you want them on the export.
 
 ## If something looks wrong
 
-- **Blank or unstyled slides** — `webslides.css` failed to load. Check the
+- **Blank or unstyled slides** — `webslides-1920.css` failed to load. Check the
   console; the deck depends on it for all in-slide typography and layout.
 - **Notes visible on the projector** — should be impossible (they are hidden
   in `webslides-compat.css` with `!important`), but if it happens, stop

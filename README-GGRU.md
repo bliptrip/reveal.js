@@ -69,20 +69,46 @@ Placeholders are gitignored and never overwrite a real file.
 | `#slide=24` anchors | `#/populations-map` | Renumbering no longer breaks a link. |
 | `wsOverflowingSlides()` | `revealOverflowingSlides()` | See below — this one gets meaningfully better. |
 | `wsTimings()` | `revealTimings()` | Same rehearsal report. |
-| `webslides.css` | `webslides.css` | **Unchanged, still doing the work.** See below. |
+| `webslides.css` | `webslides-1920.css` | **Same rules, media queries baked at 1920×1080.** See below. |
 
 ### WebSlides' stylesheet is still the theme
 
-No reveal theme is loaded. `presentation/css/webslides.css` is upstream
-WebSlides, unmodified, and it still owns everything inside a slide: the
-typography scale, `.wrap` / `.grid` / `.column`, `.card-50`, `.bg-apple`, the
-`.background` / `.dark` / `.ddark` overlays — including the overlay opacities
-tuned on 9 Sep, which keep their exact values.
+No reveal theme is loaded. WebSlides' stylesheet still owns everything inside
+a slide: the typography scale, `.wrap` / `.grid` / `.column`, `.card-50`,
+`.bg-apple`, the `.background` / `.dark` / `.ddark` overlays — including the
+overlay opacities tuned on 9 Sep, which keep their exact values.
+
+What the deck loads is `presentation/css/webslides-1920.css`, generated from
+upstream `webslides.css` by `tools/bake-webslides.py`. WebSlides is a fluid
+framework: its heading sizes, `.wrap` width, grid behaviour and section
+padding all switch on `@media` queries keyed to the *browser window*
+(568 / 768 / 1024 / 1200 / 1280 px, plus aspect-ratio and orientation).
+reveal, on the other hand, scales a fixed 1920×1080 box with a CSS transform,
+and media queries cannot see a transform — so a laptop window under 1024px,
+or the small preview iframes in the speaker view, would get WebSlides' tablet
+layout scaled up. The bake evaluates every query once at 1920×1080: true
+queries are unwrapped, false ones dropped, `print` is kept verbatim. The
+result is WebSlides at exactly 1920×1080, whatever the window does.
+
+Upstream `webslides.css` stays in the tree, unmodified, as the source for
+that bake. One quirk is deliberately carried over: upstream has a missing
+brace at `.card-20 figure`, and browsers recover by discarding the rules that
+follow it in that block. The deck was tuned against that recovered rendering,
+so the bake reproduces it rather than fixing upstream (see
+`UPSTREAM_REPAIRS` in the tool, which fails loudly if upstream changes).
 
 `presentation/css/webslides-compat.css` is the treaty between the two
 frameworks. reveal owns the *deck* (which slide, transitions, scaling, speaker
 view); WebSlides owns the *slide*. The shim stops each from reaching into the
-other's territory and is commented rule by rule.
+other's territory and is commented rule by rule. It is deliberately short:
+reveal.css 6 does not style slide contents at all (that lives in a theme, and
+none is loaded), so there is nothing to neutralise — and a `.reveal h1` rule
+written to "protect" WebSlides' typography would instead override it on
+specificity. Two things the shim cannot do in CSS are set in
+`Reveal.initialize()` instead: `display: 'flex'`, because reveal writes the
+display value inline on every slide and its default `block` would defeat
+WebSlides' flex-column centring; and `center: false`, because reveal's own
+centring would fight the same thing.
 
 ### Browser zoom stopped mattering
 
@@ -107,7 +133,8 @@ Same number, correct frame of reference.
 presentation/
   index.html                  the deck — generated, see below
   css/
-    webslides.css             upstream WebSlides (MIT), unmodified
+    webslides.css             upstream WebSlides (MIT), unmodified; bake source only
+    webslides-1920.css        generated: webslides.css with @media baked at 1920x1080
     extend.css, mermaid.css, svg-icons.css   carried over unchanged
     webslides-compat.css      hand-written: the WebSlides/reveal treaty
     seminar.css               generated: the deck's old inline <style> block
@@ -119,9 +146,10 @@ static/                       media (gitignored) + favicons (tracked)
 dist/, plugin/, js/, ...      upstream reveal.js, untouched
 ```
 
-Hand-written: `webslides-compat.css`, `plugin/seminar/seminar.js`, the two
-tools, and this file. Generated: `presentation/index.html` and
-`presentation/css/seminar.css`. Everything else is upstream.
+Hand-written: `webslides-compat.css`, `plugin/seminar/seminar.js`, the three
+tools, and this file. Generated: `presentation/index.html`,
+`presentation/css/seminar.css` and `presentation/css/webslides-1920.css`.
+Everything else is upstream.
 
 ## Regenerating
 
@@ -152,8 +180,17 @@ ws2reveal: 78 slides -> presentation/index.html
               31 slides     ? min  Backup — Q&A
 ```
 
-Do not hand-edit `index.html` or `seminar.css` unless you have decided to stop
-regenerating them. Edit `webslides-compat.css` freely — it is not generated.
+If upstream `webslides.css` is ever updated, re-bake it:
+
+```bash
+python3 tools/bake-webslides.py \
+    --src presentation/css/webslides.css \
+    --out presentation/css/webslides-1920.css
+```
+
+Do not hand-edit `index.html`, `seminar.css` or `webslides-1920.css` unless
+you have decided to stop regenerating them. Edit `webslides-compat.css`
+freely — it is not generated.
 
 Note that the seven lettered blocks total 47 slides here, not the 45 the
 WebSlides README quotes; the counts drifted during the 9 Sep restructure. The
