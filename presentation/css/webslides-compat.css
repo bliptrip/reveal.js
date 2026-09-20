@@ -1,0 +1,234 @@
+/* ==========================================================================
+   webslides-compat.css
+
+   WebSlides and reveal.js both assume they own the page. This file is the
+   treaty between them. Load it AFTER webslides-1920.css and BEFORE
+   seminar.css.
+
+   The division of labour:
+
+     reveal.js  owns the deck  -- which slide is showing, transitions,
+                                  scaling, the speaker view, the overview.
+     WebSlides  owns the slide -- typography, .wrap / .grid / .column,
+                                  .card-50, .bg-apple, background overlays.
+
+   Two facts shape everything below, and both are easy to get wrong:
+
+   * reveal.css 6 does NOT style slide contents. Heading sizes, list
+     margins, table borders, image shadows -- all of that lives in a reveal
+     *theme*, and no theme is loaded here. So there is nothing to neutralise
+     inside a slide, and any `.reveal h1 { ... }` written here would not be
+     protecting WebSlides' typography, it would be overriding it: `.reveal h1`
+     (0,1,1) beats WebSlides' plain `h1` (0,0,1) every time. Likewise
+     `revert` rolls the cascade back to the *browser's* stylesheet, not to
+     WebSlides'. Neither appears in this file for that reason.
+
+   * WebSlides' layout is decided by @media queries on the browser window,
+     but a reveal slide is a fixed 1920x1080 box scaled with a transform that
+     media queries cannot see. That is not fixed here; it is fixed upstream of
+     here, by tools/bake-webslides.py, which evaluates every query at
+     1920x1080 and writes webslides-1920.css. This file assumes that baked
+     stylesheet is what loaded.
+
+   Which leaves this file with a short list of jobs: stop WebSlides sizing
+   the slide, stop reveal's few page-level defaults leaking in, and keep the
+   in-slide backgrounds and speaker notes behaving.
+   ========================================================================== */
+
+
+/* --------------------------------------------------------------------------
+   1. The slide box, and the viewport units that used to reference it
+   --------------------------------------------------------------------------
+   The original deck is full of vh units -- .fit-img is max-height:58vh, the
+   trait panels are height:calc(100vh - 33rem). Under WebSlides that was
+   correct: a section *was* the viewport.
+
+   Under reveal a slide is a fixed 1920x1080 box that gets scaled to fit the
+   display, so a raw vh would measure the browser window and the numbers
+   would drift with every projector. reveal publishes the box as
+   --slide-width / --slide-height; these two properties turn it into
+   something a stylesheet can multiply by. tools/ws2reveal.py rewrites
+   `58vh` to `calc(58 * var(--wsvh))` throughout.
+
+   Fallbacks match the Reveal.initialize() width/height in index.html. */
+.reveal {
+  --wsvh: calc(var(--slide-height, 1080px) / 100);
+  --wsvw: calc(var(--slide-width, 1920px) / 100);
+}
+
+
+/* --------------------------------------------------------------------------
+   2. The slide is the box, not the window
+   --------------------------------------------------------------------------
+   webslides-1920.css says `section { min-height: 100vh }`. Inside reveal's
+   1080px logical box, 100vh is the browser window and would be wrong on
+   every display. Pin the slide to the box instead.
+
+   Everything else WebSlides puts on a section -- flex column, centred
+   content, 2.4rem side and 12rem top/bottom padding, .fullscreen's zero
+   padding, .slide-top / .slide-bottom -- is left to webslides-1920.css.
+   reveal.css sets none of those properties, so nothing here needs to
+   restate them.
+
+   One thing this file cannot do is make the section a flex container: reveal
+   writes `style="display: block"` inline on every slide within viewDistance,
+   and an inline style beats any rule in any stylesheet. That is what the
+   `display: 'flex'` option in Reveal.initialize() is for. Without it every
+   slide's content sits at the top of the box. */
+.reveal .slides section {
+  min-height: 0;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+
+  /* reveal.css centres text on .slides; WebSlides' default is left, with
+     .aligncenter / .alignright as opt-ins. */
+  text-align: left;
+}
+
+
+/* --------------------------------------------------------------------------
+   3. Page-level defaults that reveal puts on the viewport
+   --------------------------------------------------------------------------
+   reveal.css styles .reveal-viewport (here, the .reveal element itself) with
+   color:#000 and a white background. Both sit *below* body in the tree, so
+   WebSlides' `body { color: #333 }` is overridden by inheritance. Restate
+   WebSlides' body values on .reveal, where they win. */
+.reveal {
+  font-family: 'Roboto', 'San Francisco', helvetica, arial, sans-serif;
+  font-size: 1.8rem;
+  font-weight: 300;
+  line-height: 1;
+  color: #333;
+}
+
+/* The deck switched its main line to the dark theme on 9 Sep specifically to
+   stop white flashes between slides. reveal's white viewport would
+   reintroduce one, so match it to the deck. */
+.reveal-viewport {
+  background: #000;
+  background-color: #000;
+}
+
+
+/* --------------------------------------------------------------------------
+   4. Backgrounds and background video
+   --------------------------------------------------------------------------
+   The deck uses WebSlides' in-slide background elements rather than reveal's
+   data-background-* attributes:
+
+       <span class="background ddark" style="background-image:url(...)">
+       <div class="embed cover background ddark"><video ...>
+
+   These are kept as-is. webslides-1920.css already absolutely positions
+   .background to the four corners of its containing block, and a reveal
+   slide is a positioned box, so the geometry works unchanged -- and, more to
+   the point, the .dark / .ddark overlay opacities the deck was tuned against
+   (lightened on 9 Sep) keep their exact values.
+
+   Two things do need saying explicitly. */
+
+/* reveal stacks slides; a background element must sit under the content but
+   over the slide's own background colour. */
+.reveal .slides section > .background,
+.reveal .slides section > [class*='background-'],
+.reveal .slides section > .embed.background {
+  z-index: 0;
+}
+
+.reveal .slides section > .wrap,
+.reveal .slides section > .card-50,
+.reveal .slides section > .card-20,
+.reveal .slides section > .grid,
+.reveal .slides section > h1,
+.reveal .slides section > h2 {
+  position: relative;
+  z-index: 2;
+}
+
+/* WebSlides pins a slide's <footer> to the bottom edge with
+   `.ws-ready footer { position: absolute; bottom: 0 }` -- and .ws-ready is a
+   class its JavaScript puts on <html> at start-up, which never runs here.
+   Without it the title slide's credits flow up under the subtitle instead
+   of sitting at the foot of the slide. Restated without the runtime class. */
+.reveal .slides section > footer {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  top: auto;
+  z-index: 3;
+}
+
+/* Background video. WebSlides' .embed is a 16:9 padding-bottom box
+   (56.6% of the width = 1087px at 1920 wide), and .background only adds
+   top/bottom:0 -- with an explicit height the bottom is ignored, so the box
+   ran 7px past the section. Under WebSlides the next section scrolled over
+   the excess; under reveal it would show as a strip below a letterboxed
+   slide, and revealOverflowingSlides() flags all three video slides for it.
+   Let the four-corner positioning win instead: the box is the slide box. */
+.reveal .slides section > .embed.background {
+  height: auto;
+  padding-bottom: 0;
+}
+
+/* WebSlides' .embed makes the <video> absolute and 100%, but leaves it
+   stretched. object-fit was only applied under .fullscreen. Preserved as-is
+   so the framing matches the original deck exactly. */
+.reveal .slides section .embed.background video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* .bg-apple is the deck's dark gradient, .bg-white its light slides. On a
+   reveal slide these need to paint the whole box, not just the content. */
+.reveal .slides section.bg-apple,
+.reveal .slides section.bg-white {
+  background-size: cover;
+  background-position: center;
+}
+
+
+/* --------------------------------------------------------------------------
+   5. Speaker notes must never reach the projector
+   --------------------------------------------------------------------------
+   reveal hides .notes by default, but the deck's notes are inside slides
+   that WebSlides styled as flex children, and `display:flex` on a parent
+   will happily lay out an <aside> that only had `display:none` removed by an
+   errant rule. Belt and braces -- getting this wrong puts "Do not read the
+   title" on a 32-inch display in front of the hiring committee. */
+.reveal .slides section aside.notes,
+.reveal .slides section .notes {
+  display: none !important;
+}
+
+
+/* --------------------------------------------------------------------------
+   6. Overview mode
+   --------------------------------------------------------------------------
+   reveal's overview ('o' / Esc) is the replacement for WebSlides' slide grid
+   ('-'). Slides are scaled down hard, so background videos in the grid are
+   wasted work -- and four autoplaying videos at once was a documented
+   annoyance in the WebSlides deck too. The slides themselves are left
+   exactly as they render full-size; the overview is a preview, not a
+   re-layout. */
+.reveal.overview .slides section .embed.background video {
+  display: none;
+}
+
+
+/* --------------------------------------------------------------------------
+   7. Print / PDF export
+   --------------------------------------------------------------------------
+   Append ?print-pdf to the URL and print to PDF. WebSlides' own @media print
+   block (kept verbatim by the bake) sets `height: auto !important` on
+   sections, which would give one slide per two pages. */
+@media print {
+  .reveal .slides section {
+    min-height: 0;
+    height: 100% !important;
+    page-break-after: always;
+  }
+}
