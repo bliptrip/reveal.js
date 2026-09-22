@@ -23,3 +23,77 @@ ul.oldschool li {
 li.ulnest {
     list-style:none;
 }
+
+/* ---------------------------------------------------------------------------
+   Slide number.
+
+   reveal pins .slide-number to the bottom-right corner of the *viewport*
+   (position:absolute inside .reveal, outside the scaled .slides transform),
+   which is where this deck's footer block already lives -- the title slide's
+   name/affiliation stack, and every .content-right footer after it. Moved
+   clear of it, to the top-left corner, and dressed down: no chip, muted grey,
+   so it reads as a page number on the audience screen rather than as a piece
+   of player UI. The navigation arrows take the opposite (top-right) corner.
+
+   To move it elsewhere, change the two offsets below; the pair to unset is
+   whichever of top/right/bottom/left you are not using.
+   --------------------------------------------------------------------------- */
+.reveal .slide-number {
+  right: auto;
+  left: 24px;
+  bottom: auto;
+  top: 18px;
+
+  background-color: transparent;
+  color: rgba(255, 255, 255, 0.45);
+  font-family: 'Roboto', helvetica, arial, sans-serif;
+  font-size: 16px;
+  padding: 0;
+}
+
+/* Light slides need the inverse, or the number vanishes into the background
+   it is sitting on -- 35 of this deck's slides are .bg-white.
+
+   reveal's own has-light-background class is no help here: it is derived from
+   the computed colour of the generated .slide-background element, and this
+   deck paints its backgrounds on the <section> itself via WebSlides classes,
+   so that element is transparent and reveal reads no contrast at all. Hence
+   :has(), which asks the question directly of whichever slide is present.
+   .slide-number is a sibling of .slides, not a descendant of the section, so
+   the test has to start at .reveal. */
+.reveal:has(section.present.bg-white) .slide-number,
+.reveal:has(section.present.bg-light) .slide-number,
+.reveal.has-light-background .slide-number {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+/* ---------------------------------------------------------------------------
+   Navigation arrows.
+
+   reveal anchors the .controls cluster to the bottom-right corner of the
+   *viewport* and lays its four arrows out as a cross growing up and to the
+   left of that corner: navigate-left/right on a row 3.2em up, navigate-up
+   above them, navigate-down in the corner itself. That corner is where the
+   deck's footer furniture lives, so the cluster moves to the top-right.
+
+   This deck is flat -- 87 sibling sections, no vertical stacks -- so only the
+   left/right pair is ever .enabled, and the row is set flush with the
+   container (top: 0) rather than 3.2em up, which would leave it hanging a
+   whole arrow's height below the top edge for no reason. navigate-up and
+   navigate-down are left with reveal's own bottom: offsets and so sit above
+   the viewport; if this deck ever gains vertical slides, restate the whole
+   cross instead -- navigate-up { bottom: auto; top: 0 }, the left/right row
+   at top: 3.2em, navigate-down { bottom: auto; top: 6.4em } -- and drop the
+   top offset here by 3.2em to keep the row where it is now.
+   --------------------------------------------------------------------------- */
+.reveal .controls {
+  bottom: auto;
+  top: var(--r-controls-spacing);
+  right: var(--r-controls-spacing);
+}
+
+.reveal .controls .navigate-left,
+.reveal .controls .navigate-right {
+  bottom: auto;
+  top: 0;
+}

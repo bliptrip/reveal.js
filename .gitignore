@@ -10,6 +10,10 @@ tmp/**
 node_modules/
 .sass-cache
 
+# tools/ is Python; byte-code caches are not deck sources.
+__pycache__/
+*.pyc
+
 # Upstream reveal.js ignores a bare `presentation` here -- it is one of its own
 # build artifacts. This deck *lives* in presentation/, so that line is replaced
 # by the specific artifact it was meant to catch.

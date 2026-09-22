@@ -162,6 +162,18 @@ def convert_slide(sec, name, minutes, index_in_section, count_in_section, seen_i
     elif sec.has_attr("class"):
         del sec["class"]
 
+    # -- autoplay -> data-autoplay, for media that survives re-entry --------
+    # WebSlides left media alone, so a plain autoplay= attribute was enough:
+    # the browser started it once and nothing ever paused it. reveal manages
+    # media itself -- it pauses every video when a slide is hidden, and on the
+    # way back it only restarts elements carrying data-autoplay (or living in
+    # a .slide-background). A ported <video autoplay> therefore plays exactly
+    # once per page load and is dead on every later visit to its slide. The
+    # native attribute is kept so the first paint is unchanged.
+    for vid in sec.find_all(["video", "audio"]):
+        if vid.has_attr("autoplay") and not vid.has_attr("data-autoplay"):
+            vid["data-autoplay"] = ""
+
     # -- viewport units inside inline styles --------------------------------
     for el in [sec] + sec.find_all(style=True):
         if el.has_attr("style"):
