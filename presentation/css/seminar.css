@@ -1,19 +1,21 @@
 /* ------------------------------------------------------------------
- * seminar.css -- deck-specific styles.
+ * seminar.css -- shared deck furniture.
  *
- * Lifted verbatim from the inline <style> block of the WebSlides deck
- * (GenevaNY-Vitis-GGRU-Interview/.../presentation.html) with the same
- * systematic change tools/ws2reveal.py makes: vh/vw units are rewritten
- * to calc() against reveal's --slide-height / --slide-width, because
- * inside a scaled reveal slide a raw vh still measures the browser
- * window rather than the 1920x1080 slide box.
+ * Presentation components for WebSlides-derived decks, sitting on top
+ * of webslides.css: cards and chips, table variants, big-number and
+ * grid layouts, figure treatments, and a few opacity overrides for
+ * WebSlides' media backgrounds.
  *
- * This file was missing from the SHRS copy of the deck (the port only
- * committed presentation/index.html), so the deck-specific classes
- * (.map-table, .chip, .unit-map, .deliverables, .numbers, .card-dark,
- * .figure-white, ...) were unstyled. Regenerated 2026-09-20.
+ * Lifted from the inline <style> block of a WebSlides deck, with the
+ * same systematic change tools/ws2reveal.py makes: vh/vw units are
+ * rewritten to calc() against reveal's --slide-height / --slide-width,
+ * because inside a scaled reveal slide a raw vh still measures the
+ * browser window rather than the 1920x1080 slide box.
+ *
+ * Some class names (.lmi-table, .cycle-img, .trait-panels) are named
+ * after the slide that first needed them; the rules themselves carry
+ * no deck content and are reusable as-is.
  * ------------------------------------------------------------------ */
-
 /* small helpers used by the new slides */
 .fit-img { display: block; margin: 0 auto; max-height: calc(58 * var(--wsvh)); width: auto; max-width: 100%; object-fit: contain; }
 .grid .fit-img { max-height: calc(50 * var(--wsvh)); }
@@ -89,9 +91,9 @@
   width: auto; height: 100%; max-width: 100%; max-height: 100%; object-fit: contain; }
 /* white slides: tone down helper contrast */
 .bg-white .cite { color: #555; }
-    
 
-/* --- SHRS cacao deck additions ----------------------------------------- */
+
+/* --- diagram and reference-list helpers -------------------------------- */
 /* the 14-year cycle diagram (slide `cycle`) */
 .cycle-svg { width: 100%; height: auto; display: block; }
 .cycle-svg text { font-family: 'Roboto', helvetica, arial, sans-serif; }
