@@ -1,0 +1,105 @@
+/* ------------------------------------------------------------------
+ * seminar.css -- shared deck furniture.
+ *
+ * Presentation components for WebSlides-derived decks, sitting on top
+ * of webslides.css: cards and chips, table variants, big-number and
+ * grid layouts, figure treatments, and a few opacity overrides for
+ * WebSlides' media backgrounds.
+ *
+ * Lifted from the inline <style> block of a WebSlides deck, with the
+ * same systematic change tools/ws2reveal.py makes: vh/vw units are
+ * rewritten to calc() against reveal's --slide-height / --slide-width,
+ * because inside a scaled reveal slide a raw vh still measures the
+ * browser window rather than the 1920x1080 slide box.
+ *
+ * Some class names (.lmi-table, .cycle-img, .trait-panels) are named
+ * after the slide that first needed them; the rules themselves carry
+ * no deck content and are reusable as-is.
+ * ------------------------------------------------------------------ */
+/* small helpers used by the new slides */
+.fit-img { display: block; margin: 0 auto; max-height: calc(58 * var(--wsvh)); width: auto; max-width: 100%; object-fit: contain; }
+.grid .fit-img { max-height: calc(50 * var(--wsvh)); }
+.cite { opacity: .75; font-weight: 300; margin-top: 1.2rem; }
+.kicker { text-transform: uppercase; letter-spacing: .12em; font-weight: 600; opacity: .8; margin-bottom: .4rem; }
+.chip { display: inline-block; font-size: 1.6rem; font-weight: 600; letter-spacing: .04em; padding: .1rem .8rem; margin-right: .6rem; border-radius: 1rem; background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.35); vertical-align: middle; }
+.card-dark { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.18); border-radius: 1rem; padding: 2rem 2.4rem; margin: 0 .8rem; }
+.card-dark h5 { opacity: .9; font-size: 2.7rem; line-height: 3.7rem; font-weight: 300; }
+.card-dark h4 { margin-bottom: .6rem; }
+/* map slide */
+.map-table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; }
+.map-table th { font-size: 2.2rem; text-transform: uppercase; letter-spacing: .06em; opacity: .8; padding: .8rem 1.2rem; border-bottom: 2px solid rgba(255,255,255,.35); text-align: left; }
+.map-table td { font-size: 2.6rem; line-height: 3.6rem; padding: 1.1rem 1.2rem; border-bottom: 1px solid rgba(255,255,255,.18); vertical-align: top; }
+/* backup comparison table (denser) */
+.cmp-table td { font-size: 2.2rem; line-height: 3rem; padding: .8rem 1.2rem; }
+.cmp-table td:first-child { opacity: .85; text-transform: uppercase; letter-spacing: .05em; font-size: 1.9rem; }
+.lmi-table td, .lmi-table th { font-size: 2rem; line-height: 2.5rem; padding: .3rem .9rem; text-align: left; }
+.lmi-table td:first-child { opacity: 1; text-transform: none; letter-spacing: 0; font-size: 2rem; }
+/* path slide */
+.path-grid .column { padding: 0 1.2rem; }
+.path-grid h5 { opacity: .8; }
+/* big numbers */
+.numbers h1 { font-size: 7.2rem; line-height: 8rem; margin-bottom: .4rem; }
+.numbers h4 small { font-size: 1.9rem; opacity: .8; }
+.numbers-inline { justify-content: center; gap: 4rem; margin-top: 1.5rem; }
+.numbers-inline h3 { margin: 0 2rem; }
+.numbers-inline small { font-size: 2rem; font-weight: 300; }
+/* unit map (vision) */
+.unit-map { display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: minmax(calc(21 * var(--wsvh)), auto); gap: 1.4rem; margin-top: 1.6rem; }
+.unit-map .cell { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.2); border-radius: 1rem; padding: 1.2rem 1.6rem; }
+.unit-map .cell h5 { margin-bottom: .6rem; text-transform: uppercase; letter-spacing: .06em; font-size: 2.3rem; }
+.unit-map .cell p { font-size: 2.3rem; line-height: 3.2rem; margin: 0; }
+.unit-map .cell.me { background: rgba(126,211,126,.18); border: 2px solid rgba(126,211,126,.7); }
+.unit-map .cell.me p { font-size: 2.4rem; line-height: 3.3rem; }
+.unit-map .cell.me h4 { font-size: 2.8rem; line-height: 3.6rem; }
+/* deliverables */
+.deliverables { list-style: none; margin-left: 0; }
+.deliverables li { margin: 1rem 0; }
+.deliverables .num { display: inline-block; width: 4.4rem; height: 4.4rem; line-height: 4.4rem; text-align: center; border-radius: 50%; background: rgba(126,211,126,.25); border: 1px solid rgba(126,211,126,.7); margin-right: 1.2rem; font-weight: 600; }
+.summary-grid .column { text-align: center; }
+.lmi-svg { width: 100%; height: auto; display: block; }
+/* figures keep a white ground on the dark theme (plots were made for white) */
+.figure-white { background: #fff; padding: 1.2rem; border-radius: .8rem; box-shadow: 0 .6rem 2.4rem rgba(0,0,0,.35); }
+.figure-white.fit-img { max-height: calc(58 * var(--wsvh)); }
+.grid .figure-white.fit-img { max-height: calc(50 * var(--wsvh)); }
+/* let the video / photo backgrounds show through a little more than WebSlides' defaults
+   (WebSlides: .dark = .2, .ddark = .1 opacity on the media element) */
+[class*='bg-'] .embed.background.ddark { opacity: .3; }
+[class*='bg-'] .embed.background.dark  { opacity: .4; }
+[class*='bg-'] .background.ddark { opacity: .2; }   /* cover photos only; figure-based dividers keep the default */
+[class*='bg-'] .background.dark  { opacity: .32; }
+/* --- three trait panels (slide `plot-traits-pics`) ------------------
+   Two photographs (crop freely) + one schematic (must not be cropped).
+   One shared box height keeps the panels aligned and keeps the slide
+   inside calc(100 * var(--wsvh)) at every zoom level. */
+.trait-panels > .column { padding: 0 1.2rem; }
+.trait-panels .panel-head { padding: 0 0 1.2rem 0; }
+.trait-panels .panel-head h3 { margin: 0; }
+.trait-panels .figbox {
+  padding: 0;
+  height: calc(calc(100 * var(--wsvh)) - 33rem);   /* 24rem slide padding + header + slack */
+  max-height: calc(68 * var(--wsvh));
+  min-height: 24rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: .8rem; }
+.trait-panels .figbox img { display: block; width: 100%; height: 100%; object-fit: cover; }
+/* the schematic carries labels at both edges - contain it, never cover */
+.trait-panels .figbox.schematic { padding: 1rem; }
+.trait-panels .figbox.schematic img {
+  width: auto; height: 100%; max-width: 100%; max-height: 100%; object-fit: contain; }
+/* white slides: tone down helper contrast */
+.bg-white .cite { color: #555; }
+
+
+/* --- diagram and reference-list helpers -------------------------------- */
+/* the 14-year cycle diagram (slide `cycle`) */
+.cycle-svg { width: 100%; height: auto; display: block; }
+.cycle-svg text { font-family: 'Roboto', helvetica, arial, sans-serif; }
+/* references slide */
+.ref-list { list-style: none; margin-left: 0; }
+.ref-list li { margin: 0 0 1rem 0; }
+.ref-list h5 { font-size: 2.1rem; line-height: 2.9rem; font-weight: 300; opacity: .92; }
+/* the 14-year cycle figure is now an external SVG loaded as an image */
+.cycle-img { width: 100%; max-width: 1700px; }
