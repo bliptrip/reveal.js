@@ -42,6 +42,17 @@ Commands
               after a dashed rule and in a highlighted box. --remove strips
               them again. The script block is invisible to list / extract /
               check, and update keeps it, so the cue round-trip is unchanged.
+    prettify  re-indent every <aside class="notes"> (one block element per
+              line, nested by depth) and wrap its text at --wrap columns
+              (default 120, counting the indent). Only whitespace HTML ignores
+              is changed, so the speaker view and extract / check / update
+              read the notes exactly as before. --dry-run shows the diff.
+
+    update, scripts and restamp also take --prettify [--wrap N], which runs
+    prettify on the deck before it is written (and before update's
+    --dry-run diff). Without it they write the <aside> blocks they change on
+    one line, as before. extract never needs it: it reads a prettified deck
+    and a one-line deck the same way.
 
 Examples
 --------
@@ -51,6 +62,8 @@ Examples
     python3 tools/speaker_notes.py extract --into TPGRDRU_Seminar_Prep.md
     python3 tools/speaker_notes.py restamp
     python3 tools/speaker_notes.py scripts --from TPGRDRU_Seminar_Prep.md
+    python3 tools/speaker_notes.py prettify --wrap 100
+    python3 tools/speaker_notes.py update --from TPGRDRU_Seminar_Prep.md --prettify
 
 The deck is edited as text, slide by slide: nothing outside the <aside> (or,
 for restamp, the <section> start tags and totalTime) is re-serialised, so
@@ -392,6 +405,182 @@ def restamp(src, slides):
 
 
 # --------------------------------------------------------------------------
+# prettify: re-indent and wrap the <aside class="notes"> blocks
+# --------------------------------------------------------------------------
+# Only whitespace changes, and only where HTML ignores it: next to block
+# tags, and a run of spaces inside text may become a newline + indent. No
+# whitespace is added between two things that were touching, tags are
+# copied verbatim, and nothing outside the notes is touched -- so the
+# speaker view renders the same and extract / check / update see the same
+# notes either way. Each rewritten <aside> is verified before it is kept.
+
+DEFAULT_WRAP = 120
+INDENT = '  '
+WRAPPER_TAGS = {'ul', 'ol', 'dl', 'div', 'table', 'thead', 'tbody', 'tfoot', 'tr',
+                'blockquote', 'section', 'figure', 'details'}
+TEXT_TAGS = {'li', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'td', 'th', 'dt', 'dd',
+             'figcaption', 'caption', 'summary'}
+VOID_BLOCK_TAGS = {'hr'}
+BLOCK_TAGS = WRAPPER_TAGS | TEXT_TAGS | VOID_BLOCK_TAGS
+HTML_WS = '[ \t\n\r\f]+'           # HTML whitespace; not \s, which would eat U+00A0
+RAW_TEXT_RE = re.compile(r'<(?:pre|textarea|script|style)\b', re.I)
+TOKEN_RE = re.compile(r'<!--.*?-->|<(?:[^>"\']|"[^"]*"|\'[^\']*\')*>|[^<]+|<', re.S)
+TAGNAME_RE = re.compile(r'<(/?)([A-Za-z][A-Za-z0-9]*)')
+BLOCK_EDGE_RE = re.compile(r'(?:%s)?(</?(?:%s)\b[^>]*>)(?:%s)?'
+                           % (HTML_WS, '|'.join(sorted(BLOCK_TAGS)), HTML_WS), re.I)
+
+
+def squash(h):
+    """Notes HTML without layout whitespace: equal for a one-line and a prettified <aside>."""
+    return BLOCK_EDGE_RE.sub(r'\1', re.sub(HTML_WS, ' ', h or '')).strip(' ')
+
+
+def pretty_notes(inner, indent, width=DEFAULT_WRAP):
+    """Notes <aside> inner HTML -> list of indented, wrapped lines."""
+    lines, run = [], []            # run: pieces of the current text line; None = a space
+    level = 0
+    run_indent = cont_indent = indent
+
+    def ind(n):
+        return indent + INDENT * n
+
+    def add(piece):
+        nonlocal run_indent, cont_indent
+        if not run:
+            run_indent = cont_indent = ind(level)
+        run.append(piece)
+
+    def flush():
+        while run and run[0] is None:
+            run.pop(0)
+        while run and run[-1] is None:
+            run.pop()
+        if not run:
+            return
+        words, cur = [], ''
+        for piece in run:          # pieces with no space between them never split
+            if piece is None:
+                if cur:
+                    words.append(cur)
+                cur = ''
+            else:
+                cur += piece
+        if cur:
+            words.append(cur)
+        line = run_indent + words[0]
+        for w in words[1:]:
+            if len(line) + 1 + len(w) > width:
+                lines.append(line)
+                line = cont_indent + w
+            else:
+                line += ' ' + w
+        lines.append(line)
+        run.clear()
+
+    for tok in TOKEN_RE.findall(inner):
+        m = TAGNAME_RE.match(tok)
+        name = m.group(2).lower() if m else None
+        closing = bool(m and m.group(1))
+        if name in WRAPPER_TAGS:
+            flush()
+            if closing:
+                level = max(level - 1, 0)
+            lines.append(ind(level) + tok)
+            if not closing and not tok.endswith('/>'):
+                level += 1
+        elif name in TEXT_TAGS:
+            if closing:
+                level = max(level - 1, 0)
+                while run and run[-1] is None:
+                    run.pop()
+                add(tok)
+                flush()
+            else:
+                flush()
+                add(tok)
+                level += 1
+                cont_indent = ind(level)
+        elif name in VOID_BLOCK_TAGS:
+            flush()
+            lines.append(ind(level) + tok)
+        elif tok.startswith('<') and len(tok) > 1:
+            add(tok)                # inline tag or comment: part of the text
+        else:
+            for part in re.split('(%s)' % HTML_WS, tok):
+                if not part:
+                    continue
+                if re.fullmatch(HTML_WS, part):
+                    if run and run[-1] is not None:
+                        run.append(None)
+                else:
+                    add(part)
+    flush()
+    return lines
+
+
+def _cue_part(inner):
+    i = inner.find(SCRIPT_MARK)
+    return inner if i < 0 else inner[:i]
+
+
+def _same_notes(a, b):
+    # squash() equal => only ignorable whitespace differs; the Markdown test
+    # guards extract / update, which read the cues as text
+    return squash(a) == squash(b) and notes_to_md(_cue_part(a)) == notes_to_md(_cue_part(b))
+
+
+def prettify_deck(src, width=DEFAULT_WRAP):
+    """Return (new src, number of <aside> blocks reformatted, ids/positions skipped)."""
+    done, skipped = [0], []
+
+    def repl(m):
+        inner = m.group(1)
+        if not inner.strip() or RAW_TEXT_RE.search(inner):
+            return m.group(0)
+        line_start = src.rfind('\n', 0, m.start()) + 1
+        base = re.match(r'[ \t]*', src[line_start:m.start()]).group(0)
+        new_inner = '\n' + '\n'.join(pretty_notes(inner, base + INDENT, width)) + '\n' + base
+        if not _same_notes(inner, new_inner):
+            skipped.append('line %d' % (src.count('\n', 0, m.start()) + 1))
+            return m.group(0)
+        if new_inner != inner:
+            done[0] += 1
+        start_tag = m.group(0)[:m.start(1) - m.start(0)]
+        return start_tag + new_inner + '</aside>'
+
+    new = NOTES_RE.sub(repl, src)
+    for where in skipped:
+        print('warning: notes at %s left as they were (prettify would have changed them)' % where,
+              file=sys.stderr)
+    return new, done[0], skipped
+
+
+def maybe_prettify(args, src):
+    """Apply prettify when the command was given --prettify."""
+    if not getattr(args, 'prettify', False):
+        return src
+    new, n, _ = prettify_deck(src, args.wrap)
+    if n:
+        print('prettified notes on %d slides (wrap %d)' % (n, args.wrap))
+    return new
+
+
+def cmd_prettify(args):
+    src = Path(args.deck).read_text(encoding='utf-8')
+    new, n, skipped = prettify_deck(src, args.wrap)
+    if args.dry_run:
+        diff = difflib.unified_diff(src.splitlines(), new.splitlines(), 'before', 'after', lineterm='', n=0)
+        print('\n'.join(diff))
+        print('%d <aside> blocks would change (wrap %d)' % (n, args.wrap))
+        return
+    if new != src:
+        Path(args.deck).write_text(new, encoding='utf-8')
+    print('prettified notes on %d slides (wrap %d)%s' % (
+        n, args.wrap, '; %d left unchanged' % len(skipped) if skipped else ''))
+    sys.exit(1 if skipped else 0)
+
+
+# --------------------------------------------------------------------------
 # commands
 # --------------------------------------------------------------------------
 
@@ -465,7 +654,7 @@ def cmd_update(args):
             continue
         if lines and lines != ['_(no notes)_']:
             inner = md_to_notes(lines)
-            if inner != (s.notes_html or ''):
+            if squash(inner) != squash(s.notes_html):
                 changed.append(sid)
                 set_notes(s, inner)
         if args.apply_minutes and mins is not None and mins != s.minutes:
@@ -476,6 +665,7 @@ def cmd_update(args):
         src2, slides2 = new, [Slide(m) for m in SECTION_RE.finditer(new)]
         new, total = restamp(src2, slides2)
         print('retimed: ' + ', '.join(retimed) + ' (talk now %s min)' % fmt_minutes(total))
+    new = maybe_prettify(args, new)
     for k in unknown:
         print('warning: %s is not a slide id in %s' % (k, args.deck), file=sys.stderr)
     print('%d slides with new notes%s' % (len(changed), (': ' + ', '.join(changed)) if changed else ''))
@@ -491,6 +681,7 @@ def cmd_update(args):
 def cmd_restamp(args):
     src, slides = load(args.deck)
     new, total = restamp(src, slides)
+    new = maybe_prettify(args, new)
     if new != src:
         Path(args.deck).write_text(new, encoding='utf-8')
     print('restamped %d slides; timed talk = %s min' % (len(slides), fmt_minutes(total)))
@@ -566,7 +757,7 @@ def cmd_scripts(args):
                 continue
             set_notes(s, s.notes_html or '', tail=script_html(paras))
             done.append(sid)
-    new = rebuild(src, slides)
+    new = maybe_prettify(args, rebuild(src, slides))
     if new != src:
         Path(args.deck).write_text(new, encoding='utf-8')
     print('%s scripts on %d slides' % ('removed' if args.remove else 'wrote', len(done)))
@@ -581,7 +772,7 @@ def cmd_check(args):
         md1 = notes_to_md(s.notes_html)
         h2 = md_to_notes(md1)
         md2 = notes_to_md(h2)
-        if md1 != md2 or _text(s.notes_html) != _text(h2):
+        if md1 != md2 or _text(squash(s.notes_html)) != _text(squash(h2)):
             bad += 1
             print('✗ %s' % s.id)
             for d in difflib.unified_diff(md1, md2, lineterm='', n=0):
@@ -598,6 +789,17 @@ def main(argv=None):
                                 formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument('--deck', default=str(DEFAULT_DECK), help='deck HTML (default: presentation/index.html)')
     sub = p.add_subparsers(dest='cmd', required=True)
+
+    def wrap_opt(sp):
+        sp.add_argument('--wrap', type=int, default=DEFAULT_WRAP, metavar='COLS',
+                        help='prettify: wrap notes text at COLS columns, indent included '
+                             '(default %d)' % DEFAULT_WRAP)
+
+    def pretty_opts(sp):
+        sp.add_argument('--prettify', action='store_true',
+                        help='re-indent and wrap the notes before writing the deck')
+        wrap_opt(sp)
+
     sub.add_parser('list', help='slides, minutes and note lengths').set_defaults(func=cmd_list)
     e = sub.add_parser('extract', help='notes -> Markdown')
     e.add_argument('-o', '--output', help='write to FILE instead of stdout')
@@ -607,14 +809,22 @@ def main(argv=None):
     u.add_argument('--from', dest='source', required=True, metavar='FILE.md')
     u.add_argument('--apply-minutes', action='store_true', help='also apply "· N min" from headings')
     u.add_argument('--dry-run', action='store_true')
+    pretty_opts(u)
     u.set_defaults(func=cmd_update)
-    sub.add_parser('restamp', help='recompute timing and section attributes').set_defaults(func=cmd_restamp)
+    r = sub.add_parser('restamp', help='recompute timing and section attributes')
+    pretty_opts(r)
+    r.set_defaults(func=cmd_restamp)
     sub.add_parser('check', help='round-trip test of every slide\'s notes').set_defaults(func=cmd_check)
     sc = sub.add_parser('scripts', help='prep-doc spoken scripts -> highlighted block below the cues')
     g = sc.add_mutually_exclusive_group(required=True)
     g.add_argument('--from', dest='source', metavar='PREP.md')
     g.add_argument('--remove', action='store_true')
+    pretty_opts(sc)
     sc.set_defaults(func=cmd_scripts)
+    pr = sub.add_parser('prettify', help='re-indent and wrap every <aside class="notes"> in place')
+    wrap_opt(pr)
+    pr.add_argument('--dry-run', action='store_true', help='print the diff instead of writing')
+    pr.set_defaults(func=cmd_prettify)
     args = p.parse_args(argv)
     args.func(args)
 
