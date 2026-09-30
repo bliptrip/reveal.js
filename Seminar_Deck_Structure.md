@@ -71,6 +71,8 @@ Fixed on the slides: Kauaʻi added to the island list (Ramírez-Camejo 2022: eve
 
 ## Working with the notes (`tools/speaker_notes.py`)
 
+The `Makefile` wraps every direction: `make` lists the targets; `make sync` pushes the prep doc (cues, minutes, scripts) into the deck and checks it; `make notes-to-prep` goes the other way. Each target's comment in the Makefile says which files it reads and which it overwrites.
+
 ```bash
 python3 tools/speaker_notes.py list                                   # slides, minutes, note lengths, section end-times
 python3 tools/speaker_notes.py extract -o Speaker_Notes.md            # all notes → Markdown
