@@ -37,6 +37,11 @@ Commands
               after slides are added, removed, reordered or retimed
     check     round-trip every slide's notes HTML -> Markdown -> HTML and
               report any slide whose notes would not survive unchanged
+    scripts   --from PREP.md  copy each slide's spoken script (the "> " quoted
+              lines under its heading) into the deck notes, below the cues,
+              after a dashed rule and in a highlighted box. --remove strips
+              them again. The script block is invisible to list / extract /
+              check, and update keeps it, so the cue round-trip is unchanged.
 
 Examples
 --------
@@ -45,6 +50,7 @@ Examples
     python3 tools/speaker_notes.py update --from TPGRDRU_Seminar_Prep.md
     python3 tools/speaker_notes.py extract --into TPGRDRU_Seminar_Prep.md
     python3 tools/speaker_notes.py restamp
+    python3 tools/speaker_notes.py scripts --from TPGRDRU_Seminar_Prep.md
 
 The deck is edited as text, slide by slide: nothing outside the <aside> (or,
 for restamp, the <section> start tags and totalTime) is re-serialised, so
@@ -69,6 +75,17 @@ except ImportError:  # pragma: no cover
 HERE = Path(__file__).resolve().parent
 DEFAULT_DECK = HERE.parent / "presentation" / "index.html"
 BASE_URL = "http://localhost:8000/presentation/#/"
+
+# Spoken-script block appended to a slide's notes (below the cues). Inline
+# styles, because the notes are shown in reveal's speaker window, which does
+# not load the deck's CSS.
+SCRIPT_MARK = '<hr class="notes-script-rule"'
+SCRIPT_RULE = ('<hr class="notes-script-rule" style="border:0;border-top:3px dashed #d08c00;'
+               'margin:16px 0 10px;">')
+SCRIPT_BOX = ('<div class="notes-script" style="background:#fff3cd;color:#2b2100;'
+              'border-left:6px solid #e0a100;border-radius:4px;padding:8px 12px;line-height:1.45;">')
+SCRIPT_LABEL = ('<p style="margin:0 0 6px;font-size:0.75em;font-weight:bold;letter-spacing:0.08em;'
+                'color:#9a6700;">FULL SCRIPT</p>')
 
 SECTION_RE = re.compile(r'(<section\b[^>]*>)(.*?)(</section>)', re.S)
 ID_RE = re.compile(r'\bid="([^"]+)"')
@@ -129,9 +146,24 @@ class Slide:
         return float(v) if v not in (None, '') else None
 
     @property
-    def notes_html(self):
+    def notes_all(self):
         m = NOTES_RE.search(self.body)
         return m.group(1) if m else None
+
+    @property
+    def notes_html(self):
+        """The cue notes only (the spoken-script block, if any, is excluded)."""
+        a = self.notes_all
+        if a is None:
+            return None
+        i = a.find(SCRIPT_MARK)
+        return a if i < 0 else a[:i].rstrip()
+
+    @property
+    def script_tail(self):
+        a = self.notes_all or ''
+        i = a.find(SCRIPT_MARK)
+        return '' if i < 0 else a[i:]
 
     def text(self):
         return self.start_tag + self.body + self.end_tag
@@ -240,8 +272,11 @@ def md_to_notes(lines):
     return ''.join(out)
 
 
-def set_notes(slide, inner):
-    new_aside = '<aside class="notes">%s</aside>' % inner
+def set_notes(slide, inner, tail=None):
+    """Replace the cue notes; the spoken-script block is kept unless tail is given."""
+    if tail is None:
+        tail = slide.script_tail
+    new_aside = '<aside class="notes">%s%s</aside>' % (inner, tail)
     if NOTES_RE.search(slide.body):
         slide.body = NOTES_RE.sub(lambda m: new_aside, slide.body, count=1)
     else:
@@ -465,6 +500,78 @@ def _text(h):
     return re.sub(r'\s+', ' ', BeautifulSoup(h or '', 'html.parser').get_text()).strip()
 
 
+def parse_scripts(path):
+    """Return {slide_id: [paragraph, ...]} from the '> ' quoted lines under each heading."""
+    result, cur, paras, buf = {}, None, [], []
+
+    def flush_para():
+        t = ' '.join(x.strip() for x in buf).strip()
+        if t:
+            paras.append(t)
+        buf.clear()
+
+    def close():
+        flush_para()
+        if cur is not None and paras:
+            result[cur] = list(paras)
+        paras.clear()
+
+    for line in Path(path).read_text(encoding='utf-8').splitlines():
+        st = line.strip()
+        m = HEAD_RE.match(st)
+        if m or st.startswith('#'):
+            close()
+            cur = m.group('id') if m else None
+            continue
+        if cur is None:
+            continue
+        if st.startswith('>'):
+            t = st[1:].strip()
+            if t:
+                buf.append(t)
+            else:
+                flush_para()
+        else:
+            flush_para()
+    close()
+    return result
+
+
+def script_html(paras):
+    out = [SCRIPT_RULE, SCRIPT_BOX, SCRIPT_LABEL]
+    for i, para in enumerate(paras):
+        h = _inline_html(para)
+        h = h.replace('<em>[', '<em style="color:#8a6a1f;">[')   # stage directions
+        margin = '0' if i == len(paras) - 1 else '0 0 8px'
+        out.append('<p style="margin:%s;">%s</p>' % (margin, h))
+    out.append('</div>')
+    return ''.join(out)
+
+
+def cmd_scripts(args):
+    src, slides = load(args.deck)
+    by_id = {s.id: s for s in slides if s.id}
+    done = []
+    if args.remove:
+        for s in slides:
+            if s.script_tail:
+                set_notes(s, s.notes_html or '', tail='')
+                done.append(s.id)
+    else:
+        scripts = parse_scripts(args.source)
+        for sid, paras in scripts.items():
+            s = by_id.get(sid)
+            if s is None:
+                print('warning: %s is not a slide id' % sid, file=sys.stderr)
+                continue
+            set_notes(s, s.notes_html or '', tail=script_html(paras))
+            done.append(sid)
+    new = rebuild(src, slides)
+    if new != src:
+        Path(args.deck).write_text(new, encoding='utf-8')
+    print('%s scripts on %d slides' % ('removed' if args.remove else 'wrote', len(done)))
+
+
 def cmd_check(args):
     src, slides = load(args.deck)
     bad = 0
@@ -503,6 +610,11 @@ def main(argv=None):
     u.set_defaults(func=cmd_update)
     sub.add_parser('restamp', help='recompute timing and section attributes').set_defaults(func=cmd_restamp)
     sub.add_parser('check', help='round-trip test of every slide\'s notes').set_defaults(func=cmd_check)
+    sc = sub.add_parser('scripts', help='prep-doc spoken scripts -> highlighted block below the cues')
+    g = sc.add_mutually_exclusive_group(required=True)
+    g.add_argument('--from', dest='source', metavar='PREP.md')
+    g.add_argument('--remove', action='store_true')
+    sc.set_defaults(func=cmd_scripts)
     args = p.parse_args(argv)
     args.func(args)
 

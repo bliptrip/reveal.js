@@ -18,20 +18,20 @@ Venue and slot: **Wednesday 30 September 2026, 8:30**, DKI-USPBARC, Hilo (Tropic
 | Block | Slides | Min | Ends ≈ |
 |---|---|---|---|
 | A. Opening (title, path, **coffee cycle**, map to the unit's commitments) | 4 | 3.0 | 3 |
-| B. Cranberry as a model system (crop, **why a coffee audience should care**, **three terms in plain words**, exposure problem) | 4 | 3.5 | 6.5 |
-| C. Meta-QTL and its deliverables: VacCAP review (Albert et al.) + Flex-Seq platform (Clare et al.) | 11 | 9.0 | 15.5 |
-| D. Image phenomics: UAV & the LMI + BerryPortraits + **berry → leaf disc** | 13 | 11.0 | 26.5 |
-| E. Genetics of the LMI | 7 | 8.5 | **35** |
-| **Research subtotal** | **39** | **35** | |
-| F. Vision for coffee at TPGRDRU (headline, why now, where it fits, Aim 1 ×2, Aim 2 ×2, Aim 3, how, not claiming, deliverables) | 11 | 11.0 | 46 |
-| G. Close (summary, acks; References & Questions untimed) | 4 | 1.0 | 47 |
-| **Vision + close** | | **12** | |
-| Backup (7 coffee + rhAmpSeq vs Flex-Seq + 32 cranberry) | 41 | — | |
-| Prep — not presented (`data-visibility="uncounted"`) | 3 | — | |
+| B. Cranberry as a model system (crop, **why a coffee audience should care**, **three terms in plain words**, exposure problem) | 4 | 3.25 | 6.25 |
+| C. Meta-QTL and its deliverables: VacCAP review (Albert et al.) + Flex-Seq platform (Clare et al.) | 11 | 8.0 | 14.25 |
+| D. Image phenomics: UAV & the LMI + BerryPortraits + **berry → leaf disc** | 13 | 10.5 | 24.75 |
+| E. Genetics of the LMI | 7 | 7.0 | **31.75** |
+| **Research subtotal** | **39** | **31.75** | |
+| F. Vision for coffee at TPGRDRU (headline, why now, where it fits, Aim 1 ×2, Aim 2 ×2, Aim 3, not claiming, deliverables) | 10 | 12.25 | 44 |
+| G. Close (summary, acks; References & Questions untimed) | 4 | 1.0 | 45 |
+| **Vision + close** | | **13.25** | |
+| Backup (how/funding + 7 coffee + rhAmpSeq vs Flex-Seq + 32 cranberry) | 42 | — | |
+| Prep — not presented (`data-visibility="hidden"`) | 3 | — | |
 
-Per-slide minutes, timed talk: title-new 0.5 · path 0.75 · cycle 1.0 · map 0.75 | background 0.75 · why-coffee 1.5 · qtl-plain 0.5 · frost 0.75 | ch2-title 0.25 · populations-map 1.0 · ch2-workflow 0.75 · plot-traits-pics 0.75 · ch2-h2-corr 0.75 · ch2-metaqtl-concept 1.25 · ch2-results 0.75 · ch2-why 0.75 · ch2-vaccap 0.5 · ch2-flexseq 1.5 · ch2-takeaways 0.75 | ch3-title 0.25 · ch3-video 0.25 · ch3-biology 1.0 · ch3-objectives 0.75 · ch3-parameters 0.75 · ch3-pipeline 1.0 · ch3-berryportraits 0.75 · ch3-leafdisc 1.25 · ch3-indices 0.75 · ch3-models 1.25 · ch3-lmi 1.5 · ch3-validation 0.5 · ch3-takeaways 1.0 | ch4-title 0.25 · ch4-objectives 0.75 · ch4-dist-blups 1.25 · ch4-qtl 1.5 · ch4-genes 1.75 · ch4-breeder 2.0 · ch4-takeaways 1.0 | vision-headline 0.5 · vision-why-now 1.0 · vision-fit 0.5 · vision-aim1 1.75 · vision-aim1-field 1.25 · vision-aim2 1.75 · vision-aim2-markers 1.25 · vision-aim3 1.5 · vision-how 0.5 · vision-not-claiming 0.5 · vision-deliverables 0.5 | summary 0.75 · acks 0.25.
+**Retimed 30 Sep 2026 to the SHRS cacao deck's shape** (Cacao: 30 research / 13.5 vision / 1.5 close = 45). The first draft budgeted the vision at ~1 min per slide (Cacao ~1.5), so it would have run ~49 min against a hard 9:30 stop. Research padding went back to Cacao timings (why-coffee 1.25, populations-map 0.75, ch2-h2-corr 0.5, ch2-flexseq 1.25, ch2-takeaways 0.5, ch3-berryportraits 0.5, ch3-lmi 1.25, ch4-qtl 1.25, ch4-genes 1.5, ch4-breeder 1.5, ch4-takeaways 0.5); the coffee bridges (`qtl-plain`, `ch3-leafdisc`) kept their time; vision slides got realistic minutes (headline 0.75, why-now 1.25, fit 1.25, aim3 1.25, not-claiming 0.75, deliverables 1.0) and `vision-how` moved to backup as `backup-how`. `python3 tools/speaker_notes.py list` has the per-slide minutes.
 
-**Vision cuts.** 10-min version: skip `vision-how` and `vision-not-claiming` (their lines become Q&A answers) and give Aim 3 one sentence. 15-min version: add `backup-stacking` after Aim 3. Never cut Q&A.
+**Vision cuts.** 10-min version: skip `vision-not-claiming` (its lines become Q&A answers; `backup-how` is already out) and give Aim 3 one sentence. 15-min version: add `backup-stacking` after Aim 3. Never cut Q&A.
 
 ## What changed from the SGPG deck
 
@@ -54,14 +54,18 @@ Per-slide minutes, timed talk: title-new 0.5 · path 0.75 · cycle 1.0 · map 0.
 
 **Stakeholder panel.** Every aim leads with the grower outcome; `qtl-plain` defines QTL, h² and AUDPC once; `vision-why-now` puts the spray cost on the slide for Shriner and Falconer; `vision-fit` names roles, not people (say the names aloud).
 
-**Honesty lines to volunteer.** Not a pathologist; not the genome group; not yet a coffee breeder (HARC since 1992); not permanent resistance (Catimor resistance overcome in Central America and Brazil); not a shorter generation. Only disease trait: cranberry fruit rot, a multi-fungus complex.
+**Honesty lines to volunteer.** Not a pathologist; not the genome group; not yet a coffee breeder (HARC since the late 1990s — ARS -019 project text); not permanent resistance (Catimor resistance overcome in Central America and Brazil); not a shorter generation. Only disease trait: cranberry fruit rot, a multi-fungus complex.
+
+## Verification pass, 30 Sep 2026
+
+Fixed on the slides: Kauaʻi added to the island list (Ramírez-Camejo 2022: every coffee island by July 2021); "since 1992" → "since the late 1990s"; Obatã "slightly susceptible"; map row 1 no longer claims fruit rot for the meta-QTL (moved to the Flex-Seq row, Clare 2026 1 → 4); "caught mislabelled parents" → "flagged a likely mislabelled parent"; qPCR "to confirm infection early"; ripening ~220–240 d; BerryPortraits r ≥ 0.94; WCR trial "23 sites on three continents"; prep slides `hidden` (were `uncounted`, which shows in the overview grid). Open: manuscript says **leaf** maturity index, deck says **late**.
 
 ## Verify before the room
 
 - ⚠ Who is on Teams (Long likely remote), who chairs, whether Matsumoto attends and whether the position is new or a backfill.
 - ⚠ CLR arrival month (Feb vs Oct 2020) — the deck says "2020, on Maui."
 - ⚠ F1-hybrid heterosis percentages (Bertrand et al. 2011) — not on any slide; don't quote.
-- ⚠ Eskes 1982 volume/pages; whether the unit uses BrAPI / Breeding Insight; who holds the ORISE postdoc.
+- ✓ Eskes 1982 = *Neth. J. Plant Pathol.* 88:127–141. ⚠ Whether the unit uses BrAPI / Breeding Insight; who holds the ORISE postdoc.
 - ⚠ MauiGrown as the only commercial Mokka grower (their claim); Nagai's pronouns.
 - ⚠ The 'Mamo' article's "Kimo Faulkner" — possibly Falconer; don't assert.
 
@@ -75,9 +79,11 @@ python3 tools/speaker_notes.py extract --into TPGRDRU_Seminar_Prep.md # deck not
 python3 tools/speaker_notes.py update --from X.md --apply-minutes     # also apply "· N min" from headings, then restamp
 python3 tools/speaker_notes.py restamp                                # after adding / moving / retiming slides
 python3 tools/speaker_notes.py check                                  # HTML → Markdown → HTML round-trip test
+python3 tools/speaker_notes.py scripts --from TPGRDRU_Seminar_Prep.md  # "> " spoken scripts → highlighted FULL SCRIPT box below the cues
+python3 tools/speaker_notes.py scripts --remove                       # strip the script boxes again
 ```
 
-A slide's notes are the lines directly under its `**[`id`](…)** · N min` heading, up to the first blank line: `- ` lines become `<li>`, other lines `<p>`; `**bold**`, `*italic*`, and `<sub>`/`<sup>`/`<br>` pass through. Slides not mentioned in the Markdown keep their notes. The deck is edited as text, so nothing outside the `<aside class="notes">` (and, for restamp, the `<section>` timing attributes and `totalTime`) changes.
+A slide's notes are the lines directly under its `**[`id`](…)** · N min` heading, up to the first blank line: `- ` lines become `<li>`, other lines `<p>`; `**bold**`, `*italic*`, and `<sub>`/`<sup>`/`<br>` pass through. Slides not mentioned in the Markdown keep their notes. Since 30 Sep every timed slide (and the backups that have one) also carries its spoken script from the prep doc, after a dashed rule in an amber box; `list`, `extract` and `check` ignore that box and `update` preserves it, so after editing a script in the prep doc rerun `scripts --from`. The deck is edited as text, so nothing outside the `<aside class="notes">` (and, for restamp, the `<section>` timing attributes and `totalTime`) changes.
 
 ## References cited in the deck
 
@@ -102,7 +108,7 @@ Slide ids in brackets are where each reference appears (slide text or notes). �
 - Keith, L. M., et al. First report of coffee leaf rust … in Hawaii. *Plant Disease*. https://doi.org/10.1094/PDIS-05-21-1072-PDN (⚠ page not readable here) [notes]
 - ✓ Ramírez-Camejo, L. A., Keith, L. M., Matsumoto, T., …, Aime, M. C. (2022). *J. Fungi* 8(2):189. https://www.mdpi.com/2309-608X/8/2/189 — 434 isolates, 17 countries, 11 SSRs, MLG 10 [vision-why-now]
 - ✓ Aristizábal, L. F., & Johnson, M. A. (2022). *Agronomy* 12(5):1134. https://www.mdpi.com/2073-4395/12/5/1134 — < 4% early → 36% at harvest; 30 lots, 204–875 m; ImageJ severity on the leaf underside [vision-why-now, vision-aim1-field]
-- ✓ Aristizábal, L. F., Maeda, C. T., Matsumoto, T., & Johnson, M. A. (2025). *Crop Protection* 196. https://www.sciencedirect.com/science/article/pii/S0261219425001619 — Priaxor < 2% / 12 wk / $140; copper < 5% / 6–8 wk / $126; biologicals failed ($138–198) [vision-why-now]
+- ✓ Aristizábal, L. F., Maeda, C. T., Matsumoto, T., & Johnson, M. A. (2025). *Crop Protection* 196:107269. https://www.sciencedirect.com/science/article/pii/S0261219425001619 — Priaxor < 2% / 12 wk / $140; copper < 5% / 6–8 wk / $126; biologicals failed ($138–198) [vision-why-now]
 - ✓ Heller, W. P., Kissinger, K. R., Brill, E., Torres-Cruz, T. J., Aime, M. C., & Keith, L. M. (2025). Real-time PCR assay detection of *H. vastatrix*. *J. Plant Pathology*. https://link.springer.com/article/10.1007/s42161-025-01991-2 [vision-aim1]
 - ✓ HDOA CLR page: https://dab.hawaii.gov/pi/main/clrinfo/ — first detected Oct 2020; Maui, Hawaiʻi Island, Oʻahu, Lānaʻi [vision-why-now]
 - ✓ USDA NASS, Coffee (Jan 2026): https://www.nass.usda.gov/Publications/Todays_Reports/reports/cafean26.pdf — 2024–25: 7,000 bearing acres, 5.26 M lb parchment, $14.80/lb, $53.017 M [vision-why-now]
@@ -112,8 +118,8 @@ Slide ids in brackets are where each reference appears (slide text or notes). �
 - ✓ Lyu, H., Song, J., Yin, Y., Wang, M.-L., Matsumoto, T., …, Yu, Q. (2025). Kona Typica genome. *Scientific Data*. https://www.nature.com/articles/s41597-025-05658-6 — > 90% of coffee produced in Kona; ~1.13 Gb; 22 chr; BUSCO 99.1%; 65,458 genes; 65.16% repeats; Guatemala 1892 [vision-why-now, backup-arabica-genome]
 - ✓ Salojärvi, J., et al. (2024). *Nature Genetics*. https://www.nature.com/articles/s41588-024-01695-w — 350–610 ka; Timor Hybrid 7–11% of the genome, mostly subgenome C; RPP8-, CPR1-, LRK10L-like arrays up-regulated after infection [vision-aim2, backup-arabica-genome]
 - ✓ Pearl, H., Nagai, C., Moore, P. H., Steiger, D., Osgood, R., & Ming, R. (2004; ARS record 2003). Construction of a genetic map for arabica coffee. *Theor. Appl. Genet.* 108:829. https://www.ars.usda.gov/research/publications/publication/?seqNo115=150010 [cycle, vision-aim2, backup-arabica-genome]
-- ✓ Myers, R. Y., Mello, C., Nagai, C., Sipes, B., & Matsumoto, T. (2023). *Agriculture* 13(6):1168. https://www.mdpi.com/2077-0472/13/6/1168 [backup-stacking]
-- ✓ Berny Mier y Terán, J. C., et al. (2025). Global *C. arabica* variety trials reveal G×E in resistance to coffee leaf rust. *Front. Plant Sci.* 16:1583595. https://www.frontiersin.org/articles/10.3389/fpls.2025.1583595/full — 29 varieties, 23 sites, 15 countries in the rust analysis; 1.47 vs 2.03; EC16 most resistant; Catimor resistance overcome in Central America and Brazil (Capucho 2012; Brenes 2025) [vision-not-claiming, backup-clr-*, backup-f1-hybrids]
+- ✓ Myers, R. Y., Mello, C., Nagai, C., Sipes, B., & Matsumoto, T. (2023). *Agriculture* 13(6):1168. https://www.mdpi.com/2077-0472/13/6/1168 — Obatã Rf 2.33 "slightly susceptible"; rootstocks named are Dewevrei / Nemaya · 'Fukunaga': Bittenbender et al. 2001, CTAHR [backup-stacking]
+- ✓ Berny Mier y Terán, J. C., et al. (2025). Global *C. arabica* variety trials reveal G×E in resistance to coffee leaf rust. *Front. Plant Sci.* 16:1583595. https://www.frontiersin.org/articles/10.3389/fpls.2025.1583595/full — 29 varieties, 23 sites on three continents in the rust analysis (country count only in Supp. Table S1A; 18 countries = whole network); 1.47 vs 2.03; EC16 most resistant; Catimor resistance overcome in Central America and Brazil (Capucho 2012; Brenes 2025) [vision-not-claiming, backup-clr-*, backup-f1-hybrids]
 - ✓ WCR *C. arabica* KASP variety-ID panel (2023): https://worldcoffeeresearch.org/resources/arabica-ldp-snp-marker-panel — 45 SNPs; 1,424 samples; 30,000+ validation; ARS a partner [vision-aim2-markers]
 - ✓ USDA-ARS joins WCR Innovea (28 Mar 2023): https://www.ars.usda.gov/news-events/news/research-news/2023/usda-ars-joins-wcr-global-coffee-breeding-network-adds-access-to-new-germplasm/ [vision-fit]
 - Merot-L'Anthoene, V., et al. (2019). Coffee 8.5K SNP array. *Plant Biotechnol. J.* https://onlinelibrary.wiley.com/doi/10.1111/pbi.13066 [notes]
@@ -122,7 +128,7 @@ Slide ids in brackets are where each reference appears (slide text or notes). �
 
 ### Rust phenotyping
 
-- ✓ Eskes, A. B. (1982). The use of leaf disk inoculations in assessing resistance to coffee leaf rust (*Hemileia vastatrix*). *Netherlands Journal of Plant Pathology* (now *Eur. J. Plant Pathol.*; ⚠ volume/pages). https://link.springer.com/article/10.1007/BF01977270 [vision-aim1, backup-clr-*]
+- ✓ Eskes, A. B. (1982). The use of leaf disk inoculations in assessing resistance to coffee leaf rust (*Hemileia vastatrix*). *Netherlands Journal of Plant Pathology* 88:127–141 (leaf-disc scores explained 79% of field variation). https://link.springer.com/article/10.1007/BF01977270 [vision-aim1, backup-clr-*]
 - ✓ Toniutti, L., et al. (2017). *Front. Plant Sci.* 8:2025. https://www.frontiersin.org/journals/plant-science/articles/10.3389/fpls.2017.02025/full — latency ~21 d Caturra vs ~37 d hybrids (27–22 °C) [ch3-leafdisc, vision-aim1, backup-clr-phenotyping]
 - ✓ Rodriguez-Gallo, Y., Escobar-Benitez, B., & Rodriguez-Lainez, J. (2023). *AgriEngineering* 5(3):88. https://www.mdpi.com/2624-7402/5/3/88 — 96 UAV photos at 2.8 m [vision-aim1-field, backup-clr-phenotyping]
 - ✓ Marin, D. B., Ferraz, G. A. S., Santana, L. S., Barbosa, B. D. S., Barata, R. A. P., Osco, L. P., Ramos, A. P. M., & Guimarães, P. H. S. (2021). *Comput. Electron. Agric.* 190:106476 [vision-aim1-field, backup-clr-phenotyping]
