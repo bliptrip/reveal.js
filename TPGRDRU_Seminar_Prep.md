@@ -384,6 +384,7 @@ If behind in the research half: one sentence each on `ch3-indices`, `ch4-qtl`, `
 **[`vision-headline`](http://localhost:8000/presentation/#/vision-headline)** · 0.75 min
 - **Say:** "A measurement-and-mapping program that turns the unit's leaf-disc screen and F2 into mapped, quantitative, durable rust resistance — and cultivars growers can verify in their own fields."
 - Three aims: measure · map · time the crop. Speak to the room (and the camera, if Long is remote).
+- Off the slide: the F2 is Mokka × Catimor 5175; the genomes are its four parental assemblies.
 
 > *[Face the room.]* What I'd bring to Hilo is a measurement-and-mapping program: one that turns your leaf-disc screen and your F2 into mapped, quantitative rust resistance — and into cultivars growers can verify in their own fields. Three aims: measure resistance, map it to markers people can use, and time the crop.
 
@@ -391,52 +392,59 @@ If behind in the research half: one sentence each on `ch3-indices`, `ch4-qtl`, `
 - Four numbers, left to right: 2020 · race XXIV beats SH5 (Kona Typica, > 90% **of Kona**) · 36% at harvest · $126–140 per acre per spray.
 - **Say:** "Every spray is a recurring cost that genetics could remove." — the line for Shriner and Falconer.
 - Don't explain rust to Keith; cite her.
+- Off the slide: all six islands (Hawaiʻi, Maui, Oʻahu, Lānaʻi, Molokaʻi, Kauaʻi), one Latin American lineage (MLG 10) · race XXIV = v2,4,5 · 30 farm lots; defoliation tracks severity, lower canopy first · copper holds CLR < 5% for 6–8 wk, Priaxor < 2% for 12 wk; biologicals failed.
+- Industry scale if asked: 7,000 bearing acres · 5.26 M lb parchment · $53.0 M (USDA NASS 2024–25).
 
 > Why now? Rust reached Maui in 2020 and was on every coffee island within a year, from one Latin American lineage. It's race XXIV — Dr. Keith's typing — which defeats SH5, the only resistance factor in Kona Typica, and Kona Typica is over 90% of what Kona grows. On farms it stays under 4% early in the season and reaches 36% at harvest, with the lower canopy losing leaves first. And the answer today is spraying: 126 to 140 dollars an acre, every six to twelve weeks. Every spray is a recurring cost that genetics could remove.
 
 **[`vision-fit`](http://localhost:8000/presentation/#/vision-fit)** · 1.25 min
 - One clause per box; say the names, they aren't on the slide: Keith · Yu, Matsumoto · Nagai, Wang · Johnson · Myers · Shriner, Falconer, Aristizábal · Muszynski, Kawabata · Long.
 - **Say:** "Pathology says which resistance matters, genomics gives the coordinates, I make the phenotype quantitative and map it, HARC advances the lines, growers check it."
+- Off the slide: race typing with CIFC, inoculum · BSA, diversity and grower-ID panels · Catimor and Obatã crosses, 'Mamo' · berry borer area-wide program · grafting · cultivar verification · Innovea shared protocols and germplasm (ARS joined 2023).
 
 > Here's where it fits. Dr. Keith's pathology decides which resistance matters. Dr. Yu's genomics and Tracie's genebank give the coordinates. *[Center.]* I make the phenotype quantitative and map it. HARC — Dr. Nagai and Dr. Wang — advance the lines; TCCPRU gives field ground truth; growers through SHAC and the coffee association run the on-farm check; and WCR's Innovea takes the best lines beyond Hawaiʻi.
 
 **[`vision-aim1`](http://localhost:8000/presentation/#/vision-aim1)** · 1.75 min
 - **Grower outcome first.** Then: time-lapse imaging of the discs the unit already runs — the components already scored by eye, now continuous and blind.
-- Checks every run, blind duplicates, inoculum recorded, qPCR (Keith's assay) to confirm infection early — don't claim pre-symptomatic detection.
-- Why continuous: XXIV beat SH5; partial components last; they split the "tolerant" class.
+- Components: latency, lesion count and area, sporulating area, AUDPC (Eskes 1982). Latency ~21 d Caturra vs ~37 d F1 hybrids (Toniutti 2017).
+- Checks every run, blind duplicates, inoculum load and viability recorded, qPCR (Keith's assay) to confirm infection early — don't claim pre-symptomatic detection.
+- Why continuous: XXIV beat SH5; partial components (longer latency, fewer lesions, less sporulation) last; they split the "tolerant" class.
 - **⚠** Say "instrument," not "invent." Ask how inoculum is standardized today.
 
 > Aim one: resistance you can measure. For growers, that's a screen that ranks seedlings by how resistant they are, so fewer susceptible trees ever reach a farm. In practice: time-lapse imaging of the leaf-disc runs you already do. Latency, lesion count and area, sporulating area and AUDPC — the components already scored by eye, now continuous, blind and repeatable. Repeatability is designed in: check cultivars in every run, blind duplicates, inoculum load and viability recorded, and Dr. Keith's qPCR to confirm infection early. Why continuous? Race-specific genes fail — XXIV already beats SH5. The partial components are what last, and they're exactly what splits the tolerant class.
 
 **[`vision-aim1-field`](http://localhost:8000/presentation/#/vision-aim1-field)** · 1.25 min
 - Phone protocol on lower-canopy leaves = Aristizábal & Johnson's sampling frame; a detector automates their ImageJ step.
-- UAV for defoliation and greenness only — spores are on the underside.
-- **The missing number:** genetic correlation, leaf disc ↔ field. That's what validates the screen.
+- UAV for defoliation and greenness only — spores are on the underside. (Rodriguez-Gallo 2023 flew at 2.8 m.)
+- **The missing number:** genetic correlation, leaf disc ↔ field severity and defoliation. That's what validates the screen.
 - If asked: Eskes 1982 found leaf-disc scores explained 79% of field variation — phenotypic, not genetic; the r<sub>g</sub> is still unmeasured in Hawaiʻi.
-- Complements the OSU–WCR hyperspectral project — don't imply rebuilding it.
+- Complements the OSU–WCR hyperspectral and gas-exchange project (lesion-level vs canopy-level) — don't imply rebuilding it.
 
 > Then the farm — the on-farm assay the project plan asks for. A phone protocol on lower-canopy leaves, where rust starts, using the sampling frame and ImageJ severity already used on Hawaiʻi farms, with a detector doing the ImageJ step. A drone for what an overhead camera can actually see — defoliation and canopy greenness — not lesions, because the spores are on the underside. Growers run it, so the multi-site data start in the first season. And the one missing number: the genetic correlation between leaf-disc traits and field severity. That's what turns a lab screen into a validated one. It complements the OSU–WCR hyperspectral work rather than rebuilding it.
 
 **[`vision-aim2`](http://localhost:8000/presentation/#/vision-aim2)** · 1.75 min
 - **Grower outcome first:** HARC keeps only resistant seedlings in the nursery.
-- The step after the bulks (8 R + 8 S, FY2025): every F2 plant measured → QTL for components, not just R vs S.
-- Allotetraploid care in one line; the detail is for Yu's question (`backup-allo-calling`).
-- **Credit Nagai:** Pearl, Nagai … Ming 2004 — Mokka hybrid × Catimor. "Same question, twenty years of better tools."
+- The step after the bulks (8 R + 8 S F2 plants, FY2025 → differential SNPs): every F2 plant measured with Aim 1 traits → QTL for latency, lesion number and sporulation, not just R vs S.
+- Simpler map: inbred parents segregate 1 : 2 : 1 per subgenome.
+- Allotetraploid care in one line (call against both C and E; expect coarse intervals inside Timor Hybrid blocks, 7–11% of the genome — Salojärvi 2024); the detail is for Yu's question (`backup-allo-calling`).
+- **Credit Nagai:** Pearl, Nagai … Ming 2004 — Mokka hybrid × Catimor pseudo-F2, 60 trees, AFLPs, 68% of markers from the Catimor side. "Same question, twenty years of better tools."
 
 > Aim two: from bulked segregants to QTL, with your genomics. For growers, that means markers that let HARC keep only resistant seedlings in the nursery. Your FY2025 bulks — eight resistant and eight susceptible F2 plants — found differential SNPs. The next step is measuring every F2 plant with the Aim 1 traits, so we get QTL for latency, lesion number and sporulation, not just resistant versus susceptible. It's a simpler map than cranberry's: inbred parents segregate one-two-one per subgenome, and both parents are assembled. The care is in the calling — per subgenome, homoeolog false-hets stripped with the parental genomes, and coarse intervals inside the Timor Hybrid blocks. And this is where it started: Dr. Nagai, with Pearl and Ming, mapped a Mokka hybrid by Catimor population in 2004. Same question, twenty years of better tools.
 
 **[`vision-aim2-markers`](http://localhost:8000/presentation/#/vision-aim2-markers)** · 1.25 min
 - Three tiers: discovery (unit genomics) → operational panel with identity + parentage (every cross) → KASP (HARC, growers).
-- Year-one paper: published rust loci on Kona Typica coordinates — **joint with Yu's group**.
-- Payoff: homozygous resistance haplotypes at F2/F3 — fewer, better trees.
+- Off the slide: parental genomes = 222,771 SNPs · 557,623 indels · the operational panel extends the grower cultivar-ID panel · KASP is homoeolog-specific, alongside WCR's open 45-SNP variety-ID panel.
+- Year-one paper: published rust loci (*SH3* on chr 3, the Timor Hybrid chr 4 R-gene region, Timor Hybrid QTL) on Kona Typica coordinates — **joint with Yu's group**.
+- Payoff: homozygous resistance haplotypes at F2/F3 — the generation stays ~3 years; the field holds fewer, better trees.
 
 > Markers people can use. The discovery tier exists: your parental genomes. The operational tier is a panel that also checks identity and parentage on every cross — an extension of the grower cultivar-ID panel. And the deployment tier is KASP for the few validated loci, which HARC and growers can run, next to WCR's open variety-ID panel. The year-one paper needs no field season: published rust loci, on the Kona Typica assembly, as a joint paper with the genomics group. And the payoff: keep only seedlings homozygous for resistance at F2 or F3. The generation stays three years; the field holds fewer, better trees.
 
 **[`vision-aim3`](http://localhost:8000/presentation/#/vision-aim3)** · 1.25 min
 - Flushes → picking rounds → leftover berries → CBB. 4.6% vs 9.0% infestation; +48% net benefit (Aristizábal, Johnson, Shriner & Wall 2023) — Shriner is a co-author.
-- Timing is genetic (30+ days between cultivars) and unmapped → the LMI construction.
-- **Falconer:** one machine pass. **Muszynski:** a heritable flowering phenotype is what candidate-gene work needs.
-- Quality is a gate — partner on the cup, don't lead it.
+- Timing is genetic (30+ days between cultivars) and unmapped (heritabilities and QTL essentially unpublished) → the LMI construction, over the resistant populations and checks.
+- Kona's ~200–900 m slope is a natural temperature × phenology gradient.
+- **Falconer:** one machine pass catches more ripe cherry. **Muszynski:** a heritable flowering phenotype is what candidate-gene work needs.
+- Quality is a gate — resistant selections cupped against Kona Typica before any release conversation; partner on the cup, don't lead it.
 
 > Aim three: the timing traits no one has mapped in coffee. Several flowering flushes mean many picking rounds, and berries left behind feed the berry borer. Frequent harvesting cut infestation from 9 to under 5% and raised net benefit by almost half — Suzanne, that's your paper with Luis, Melissa and Marisa. Synchrony makes that cheaper, and lets one machine pass catch more ripe cherry. Cultivars differ by a month in ripening, but heritabilities and QTL are essentially unpublished — so the LMI construction applies directly, with drone time series over the resistant populations. Kona's slope is a natural gradient. And quality is a gate: resistant selections get cupped against Kona Typica before anyone talks release. I'd partner on the cup, not lead it.
 
@@ -448,12 +456,14 @@ If behind in the research half: one sentence each on `ch3-indices`, `ch4-qtl`, `
 
 **[`vision-not-claiming`](http://localhost:8000/presentation/#/vision-not-claiming)** · 0.75 min
 - Say the limits yourself, quickly: not a pathologist · not the genome group · not yet a coffee breeder · not permanent resistance · not a shorter generation.
+- If pressed: rust biology, race typing and diagnostics belong to pathology · HARC has carried CLR-resistant material since the late 1990s · Catimor overcome in Central America and Brazil; durable = quantitative components + stacked, verified loci · selection moves into the nursery.
 - 10-min version: skip; use as Q&A answers.
 
 > And what I'm not claiming. I'm not a pathologist, and I'm not the genome group. I'm not yet a coffee breeder — HARC has carried resistant material since the late 1990s, and year one is learning it. I'm not promising permanent resistance: Catimor resistance has been overcome in Central America and Brazil. And I'm not shortening the generation — I'm raising accuracy and moving selection into the nursery.
 
 **[`vision-deliverables`](http://localhost:8000/presentation/#/vision-deliverables)** · 1 min
 - Five in a minute; the footer is your answer to "year one?"
+- Off the slide: (1) published repeatability; it is the on-farm susceptibility assay the project plan names · (2) F2 = Mokka × Catimor 5175; candidate genes on the unit's assemblies · (3) identity → operational → KASP; meta-QTL on one coordinate system · (4) shared with the berry-borer program · (5) a decision earlier.
 - **⏱** minute 44.
 
 > In five years: an instrumented leaf-disc assay validated against the farm; QTL for quantitative resistance in the F2; tiered markers in HARC's and growers' hands; the first heritable flowering and ripening traits in Hawaiʻi coffee; and resistant selections, cup-checked, a decision earlier. *[Footer.]* Year one: image the leaf-disc runs, map the F2 with the genomics group, write the coordinate paper, and walk the farms. *[Minute 46.]*
@@ -462,6 +472,8 @@ If behind in the research half: one sentence each on `ch3-indices`, `ch4-qtl`, `
 
 **[`summary`](http://localhost:8000/presentation/#/summary)** · 0.75 min
 - Land the last line and stop talking.
+- Six papers, if asked: meta-QTL synthesis + its deliverables (VacCAP flavonoid review, a genotyping platform) · BerryPortraits, with Breeding Insight · UAV phenomics and the LMI · genetics of dormancy exit.
+- Three commitments in full: rust-resistance loci and cultivars that keep the cup · an on-farm susceptibility assay · SNP panels for diversity and growers' fields — each met by a method used once, in another perennial.
 
 > In summary: six papers; three commitments in your project plans, each met by a method I've used once, in another perennial; and three aims — measure resistance, map it to markers people can use, and time the crop. Cranberry was the case study. The leaf disc is the next instrument. The locus is where it lands. *[Stop talking.]*
 
