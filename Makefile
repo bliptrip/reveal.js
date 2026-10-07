@@ -53,7 +53,7 @@ PRETTY := $(if $(filter 1 yes true,$(PRETTIFY)),--prettify --wrap $(NOTES_WRAP))
 RSYNC         ?= rsync
 REMOTE        ?= andrew@amanita.walnut.casa
 RPATH         ?= /data/andrew/
-RSYNC_FLAGS   ?= -av --partial --progress
+RSYNC_FLAGS   ?= -av --partial --progress --delete
 RSYNC_EXCLUDE ?= .git/ node_modules/ .DS_Store __pycache__/ .idea/
 
 .DEFAULT_GOAL := help
@@ -217,6 +217,11 @@ sync: prep-to-deck-minutes scripts check
 upload:
 	$(RSYNC) $(RSYNC_FLAGS) --stats $(addprefix --exclude=,$(RSYNC_EXCLUDE)) \
 		"$$(realpath .)" "$(REMOTE):$(RPATH)"
+
+uploadm:
+	$(RSYNC) $(RSYNC_FLAGS) --stats $(addprefix --exclude=,$(RSYNC_EXCLUDE)) \
+		"$$(realpath .)/" "$(REMOTE):/data/andrew/Maule_2026_10_TPGRDRUSeminar/"
+	ssh andrew@amanita.walnut.casa sudo chmod -R 777 /data/andrew
 
 ## upload-dry: list what `make upload` would send (read-only)
 #   in:  this folder, $(REMOTE):$(RPATH)
